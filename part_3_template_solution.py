@@ -110,7 +110,7 @@ class Section3:
             "text_rate_accuracy_change": "With the increase in k, top-k accuracy typically rises due to the model having more opportunities to encompass the correct class within its top k predictions. However, as k continues to grow, the incremental gains in accuracy tend to taper off",
             "text_is_topk_useful_and_why": "Top-k accuracy is valuable for situations where the precise ranking of the correct category is less critical than ensuring the correct category appears within the top k selections. This metric is especially pertinent to multi-class classification challenges involving numerous categories or scenarios where an approximate prediction holds significance"   })
 
-        print(answer)
+        
         return answer, Xtrain, ytrain, Xtest, ytest
 
     # --------------------------------------------------------------------------
@@ -161,7 +161,7 @@ class Section3:
         answer["max_Xtrain"] = max_Xtrain
         answer["max_Xtest"] = max_Xtest
         # Answer is a dictionary with the same keys as part 1.B
-        print(answer)
+      
         return answer, X, y, Xtest, ytest
 
     # --------------------------------------------------------------------------
@@ -244,7 +244,7 @@ class Section3:
        precision_higher_than_recall = answer['scores']['mean_precision'] > answer['scores']['mean_recall']
        answer['is_precision_higher_than_recall'] = precision_higher_than_recall
        answer['explain_is_precision_higher_than_recall'] = "Out of all positive predictions, the model reliably identifies true positive cases with a higher degree of precision than recall. In datasets with an unequal class distribution, this situation frequently arises, where the model does better at minimizing false negatives than false positives. In essence, the model does a better job of guaranteeing the accuracy of its positive predictions than it does at collecting all real positives."
-        print(answer)
+      
         return answer
 
     # --------------------------------------------------------------------------
@@ -316,5 +316,5 @@ class Section3:
 
         Recall: The scores are based on the results of the cross-validation step
         """
-        print(answer)
+      
         return answer
