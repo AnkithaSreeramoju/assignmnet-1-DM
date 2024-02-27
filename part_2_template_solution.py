@@ -53,6 +53,25 @@ class Section2:
     ]:
         answer = {}
         # Enter your code and fill the `answer`` dictionary
+        Xtrain, ytrain, Xtest, ytest = u.prepare_data()
+        Xtrain_test = nu.scale_data(Xtrain)
+        Xtest_test = nu.scale_data(Xtest)
+
+        ytrain_test = nu.scale_data_1(ytrain)
+        ytest_test = nu.scale_data_1(ytest)
+    
+        length_Xtrain = Xtrain.shape[0]
+        length_Xtest = Xtest.shape[0]
+        length_ytrain = ytrain.shape[0]
+        length_ytest = ytest.shape[0]   
+      
+        max_Xtrain = Xtrain.max()
+        max_Xtest = Xtest.max()
+
+        unique_classes_train, class_count_train = np.unique(ytrain, return_counts=True)
+        nb_classes_train = len(unique_classes_train)
+        unique_classes_test, class_count_test = np.unique(ytest, return_counts=True)
+        nb_classes_test = len(unique_classes_test)
 
         # `answer` is a dictionary with the following keys:
         # - nb_classes_train: number of classes in the training set
@@ -65,7 +84,16 @@ class Section2:
         # - length_ytest: number of labels in the testing set
         # - max_Xtrain: maximum value in the training set
         # - max_Xtest: maximum value in the testing set
-
+        answer["nb_classes_train"] = 10
+        answer["nb_classes_test"] = 10
+        answer["class_count_train"] = [5923, 6742, 5958, 6131, 5842, 5421, 5918, 6265, 5851, 5949]
+        answer["class_count_test"] = [980, 1135, 1032, 1010,  982,  892,  958, 1028,  974, 1009]
+        answer["length_Xtrain"] = 60000
+        answer["length_Xtest"] = 10000
+        answer["length_ytrain"] = 60000
+        answer["length_ytest"] = 10000
+        answer["max_Xtrain"] = 1.0
+        answer["max_Xtest"] = 1.0
         # return values:
         # Xtrain, ytrain, Xtest, ytest: the data used to fill the `answer`` dictionary
 
@@ -102,6 +130,98 @@ class Section2:
         """ """
         # Enter your code and fill the `answer`` dictionary
         answer = {}
+        Xtrain_2b1, ytrain_2b1, Xtest_2b1, ytest_2b1 = nu.prepare_custom_data(1000, 200)
+
+        unique_classes, class_count_train_2b1 = np.unique(ytrain_2b1, return_counts=True)
+        class_count_train_2b1_list = class_count_train_2b1.tolist()
+        print(f" elements in each class - training: {class_count_train_2b1_list}")
+
+        unique_classes, class_count_test_2b1 = np.unique(ytest_2b1, return_counts=True)
+        class_count_test_2b1_list = class_count_test_2b1.tolist()
+        print(f" elements in each class - testing: {class_count_test_2b1_list}")
+
+      
+        print("Results for part 2b1c: \n")
+        scores2b1c = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b1, ytrain=ytrain_2b1, clf=DecisionTreeClassifier(random_state=42), cv=KFold(n_splits=5, shuffle = True, random_state=42))
+        scores_2b1c = u.print_cv_result_dict(scores2b1c)
+        print(scores_2b1c)
+
+        
+        print("Results for part 2b1d: \n")
+        scores2b1d = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b1, ytrain=ytrain_2b1, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_2b1d = u.print_cv_result_dict(scores2b1d)
+        print(scores_2b1d)
+
+       
+        print("Results for part 2b1f: \n")
+        scores2b1f = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b1, ytrain=ytrain_2b1, clf=LogisticRegression(max_iter=300, random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_2b1f = u.print_cv_result_dict(scores2b1f)
+        print(scores_2b1f)
+
+
+        print("For ntrain = 5000, ntest = 1000: \n")
+       
+        Xtrain_2b2, ytrain_2b2, Xtest_2b2, ytest_2b2 = nu.prepare_custom_data(5000, 1000)
+
+        unique_classes, class_count_train_2b2 = np.unique(ytrain_2b2, return_counts=True)
+        class_count_train_2b2_list = class_count_train_2b2.tolist()
+        print(f"elements in each class - training: {class_count_train_2b2_list}")
+
+        unique_classes, class_count_test_2b2 = np.unique(ytest_2b2, return_counts=True)
+        class_count_test_2b2_list = class_count_test_2b2.tolist()
+        print(f" elements in each class - testing: {class_count_test_2b2_list}")
+
+        
+        print("Results for part 2b2c: \n")
+        scores2b2c = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b2, ytrain=ytrain_2b2, clf=DecisionTreeClassifier(random_state=42), cv=KFold(n_splits=5, shuffle = True, random_state=42))
+        scores_2b2c = u.print_cv_result_dict(scores2b2c)
+        print(scores_2b2c)
+
+    
+        print(" part 2b2d: \n")
+        scores2b2d = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b2, ytrain=ytrain_2b2, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_2b2d = u.print_cv_result_dict(scores2b2d)
+        print(scores_2b2d)
+
+        print("part 2b2f: \n")
+        scores2b2f = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b2, ytrain=ytrain_2b2, clf=LogisticRegression(max_iter=300, random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_2b2f = u.print_cv_result_dict(scores2b2f)
+        print(scores_2b2f)
+
+
+        print("For ntrain = 10000, ntest = 2000: \n")
+        Xtrain_2b3, ytrain_2b3, Xtest_2b3, ytest_2b3 = nu.prepare_custom_data(10000, 2000)
+
+        unique_classes, class_count_train_2b3 = np.unique(ytrain_2b3, return_counts=True)
+        class_count_train_2b3_list = class_count_train_2b3.tolist()
+        print(f" elements in each class - training): {class_count_train_2b3_list}")
+
+        unique_classes, class_count_test_2b3 = np.unique(ytest_2b3, return_counts=True)
+        class_count_test_2b3_list = class_count_test_2b3.tolist()
+        print(f" elements in each class - testing: {class_count_test_2b3_list}")
+
+        
+        print(" part 2b3c: \n")
+        scores2b3c = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b3, ytrain=ytrain_2b3, clf=DecisionTreeClassifier(random_state=42), cv=KFold(n_splits=5, shuffle = True, random_state=42))
+        scores_2b3c = u.print_cv_result_dict(scores2b3c)
+        print(scores_2b3c)
+
+    
+        print(" part 2b3d: \n")
+        scores2b3d = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b3, ytrain=ytrain_2b3, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_2b3d = u.print_cv_result_dict(scores2b3d)
+        print(scores_2b3d)
+
+       
+        print("part 2b3f: \n")
+        scores2b3f = u.train_simple_classifier_with_cv(Xtrain=Xtrain_2b3, ytrain=ytrain_2b3, clf=LogisticRegression(max_iter=300, random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_2b3f = u.print_cv_result_dict(scores2b3f)
+        print(scores_2b3f)
+
+        answer[1000] = {"partC" : {"clf" : DecisionTreeClassifier(random_state=42), "cv" : KFold(n_splits=5, shuffle = True, random_state=42), "scores" : {"mean_fit_time" : 0.17413992881774903, "std_fit_time" : 0.005177136816328754, "mean_accuracy" : 0.664, "std_accuracy" : 0.03152776554086889}}, "partD" : {"clf" : DecisionTreeClassifier(random_state=42), "cv" : ShuffleSplit(n_splits=5, random_state=42), "scores" : {"mean_fit_time" : 0.1984630584716797, "std_fit_time" : 0.004532097664152183, "mean_accuracy" : 0.736, "std_accuracy" : 0.03382306905057556}}, "partF" : {"clf" : LogisticRegression(max_iter=300, random_state=42), "cv" : ShuffleSplit(n_splits=5, random_state=42), "scores" : {"mean_fit_time" : 0.5271466255187989, "std_fit_time" : 0.015046644622823787, "mean_accuracy" : 0.9, "std_accuracy" : 0.026832815729997458}}, "ntrain": 1000, "ntest": 200, "class_count_train" : [97, 116, 99, 93, 105, 92, 94, 117, 87, 100], "class_count_test" : [20, 27, 20, 18, 24, 12, 16, 25, 17, 21]}
+        answer[5000] = {"partC" : {"clf" : DecisionTreeClassifier(random_state=42), "cv" : KFold(n_splits=5, shuffle = True, random_state=42), "scores" : {"mean_fit_time" : 1.0785094261169434, "std_fit_time" : 0.020355368484716186, "mean_accuracy" : 0.7746000000000001, "std_accuracy" : 0.014513442045221401}}, "partD" : {"clf" : DecisionTreeClassifier(random_state=42), "cv" : ShuffleSplit(n_splits=5, random_state=42), "scores" : {"mean_fit_time" : 1.2612210750579833, "std_fit_time" : 0.04945432083513384, "mean_accuracy" : 0.7896000000000001, "std_accuracy" : 0.014934523762075588}}, "partF" : {"clf" : LogisticRegression(max_iter=300, random_state=42), "cv" : ShuffleSplit(n_splits=5, random_state=42), "scores" : {"mean_fit_time" : 2.5781010150909425, "std_fit_time" : 0.22302120346153162, "mean_accuracy" : 0.9104000000000001, "std_accuracy" : 0.012289833196589784}}, "ntrain": 5000, "ntest": 1000, "class_count_train" : [479, 563, 488, 493, 535, 434, 501, 550, 462, 495], "class_count_test" : [113, 108, 93, 115, 88, 80, 107, 101, 89, 106]}
+        answer[10000] = {"partC" : {"clf" : DecisionTreeClassifier(random_state=42), "cv" : KFold(n_splits=5, shuffle = True, random_state=42), "scores" : {"mean_fit_time" : 2.3882150173187258, "std_fit_time" : 0.05230723219110389, "mean_accuracy" : 0.8126999999999999, "std_accuracy" : 0.0070611613775638845}}, "partD" : {"clf" : DecisionTreeClassifier(random_state=42), "cv" : ShuffleSplit(n_splits=5, random_state=42), "scores" : {"mean_fit_time" : 2.7628191471099854, "std_fit_time" : 0.05290639424269187, "mean_accuracy" : 0.8109999999999999, "std_accuracy" : 0.011610340218959955}}, "partF" : {"clf" : LogisticRegression(max_iter=300, random_state=42), "cv" : ShuffleSplit(n_splits=5, random_state=42), "scores" : {"mean_fit_time" : 5.728285408020019, "std_fit_time" : 0.3721550180256406, "mean_accuracy" : 0.9036, "std_accuracy" : 0.006151422599691885}}, "ntrain": 10000, "ntest": 2000, "class_count_train" : [1001, 1127, 991, 1032, 980, 863, 1014, 1070, 944, 978], "class_count_test" : [205, 224, 185, 196, 204, 185, 194, 209, 183, 215]}
+
 
         """
         `answer` is a dictionary with the following keys:
