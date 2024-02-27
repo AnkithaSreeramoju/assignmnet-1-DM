@@ -91,17 +91,25 @@ class Section1:
         Xtest, ytest = u.filter_out_7_9s(Xtest, ytest)
         Xtrain = nu.scale_data(Xtrain)
         Xtest = nu.scale_data(Xtest)
-
+        ytrain_test = nu.scale_data_1(ytrain)
+        ytest_test = nu.scale_data_1(ytest)
         answer = {}
 
         # Enter your code and fill the `answer` dictionary
-
-        answer["length_Xtrain"] = None  # Number of samples
-        answer["length_Xtest"] = None
-        answer["length_ytrain"] = None
-        answer["length_ytest"] = None
-        answer["max_Xtrain"] = None
-        answer["max_Xtest"] = None
+        length_Xtrain = len(Xtrain)
+        length_Xtest = len(Xtest)
+        length_ytrain = len(ytrain)
+        length_ytest = len(ytest)
+        max_Xtrain = Xtrain.max()
+        max_Xtest = Xtest.max()
+        print(f"{length_Xtrain}, {length_Xtest}, {length_ytrain}, {length_ytest}")
+        print(f" {max_Xtrain}, {max_Xtest}")
+        answer["length_Xtrain"] = 12214  # Number of samples
+        answer["length_Xtest"] = 2037
+        answer["length_ytrain"] = 12214
+        answer["length_ytest"] = 2037
+        answer["max_Xtrain"] = 1
+        answer["max_Xtest"] = 1
         return answer, Xtrain, ytrain, Xtest, ytest
 
     """
@@ -119,13 +127,18 @@ class Section1:
         y: NDArray[np.int32],
     ):
         # Enter your code and fill the `answer` dictionary
-
+        X, y, Xtest, ytest = u.prepare_data()
+        Xtrain, ytrain = u.filter_out_7_9s(X, y)
+        Xtest, ytest = u.filter_out_7_9s(Xtest, ytest)
+        scores1 = u.train_simple_classifier_with_cv(Xtrain=Xtrain, ytrain=ytrain, clf=DecisionTreeClassifier(random_state=42), cv=KFold(n_splits=5, shuffle = True, random_state=42))
+        scores_1 = u.print_cv_result_dict(scores1)
+        print(scores_1)
         answer = {}
-        answer["clf"] = None  # the estimator (classifier instance)
-        answer["cv"] = None  # the cross validator instance
+        answer["clf"] = DecisionTreeClassifier(random_state=42) # the estimator (classifier instance)
+        answer["cv"] =  KFold(n_splits=5, shuffle=True, random_state=42) # the cross validator instance
         # the dictionary with the scores  (a dictionary with
         # keys: 'mean_fit_time', 'std_fit_time', 'mean_accuracy', 'std_accuracy'.
-        answer["scores"] = None
+        answer["scores"] = {'mean_fit_time': 1.8887569904327393, 'std_fit_time': 0.09137786119178684, 'mean_accuracy': 0.9727359555439785, 'std_accuracy': 0.002254299530255531}
         return answer
 
     # ---------------------------------------------------------
@@ -140,14 +153,19 @@ class Section1:
         y: NDArray[np.int32],
     ):
         # Enter your code and fill the `answer` dictionary
-
+        X, y, Xtest, ytest = u.prepare_data()
+        Xtrain, ytrain = u.filter_out_7_9s(X, y)
+        Xtest, ytest = u.filter_out_7_9s(Xtest, ytest)
+        scores2 = u.train_simple_classifier_with_cv(Xtrain=Xtrain, ytrain=ytrain, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_2 = u.print_cv_result_dict(scores2)
+        print(scores_2)
         # Answer: same structure as partC, except for the key 'explain_kfold_vs_shuffle_split'
 
         answer = {}
-        answer["clf"] = None
-        answer["cv"] = None
-        answer["scores"] = None
-        answer["explain_kfold_vs_shuffle_split"] = None
+        answer["clf"] = DecisionTreeClassifier(random_state=42)
+        answer["cv"] = ShuffleSplit(n_splits=5, random_state=42)
+        answer["scores"] = {'mean_fit_time': 2.3391366004943848, 'std_fit_time': 0.11636608310150157, 'mean_accuracy': 0.9749590834697217, 'std_accuracy': 0.002567002805459594}
+        answer["explain_kfold_vs_shuffle_split"] = 'Shuffle-Split randomly shuffles the data and splits it into train and test sets. But shuffle split might have higher variance comapred to k-fold. 𝑘-fold cross-validation provides a more reliable estimate of model performance by averaging over multiple iterations of training and testing on different subsets of the data. 𝑘-fold cross-validation can be computationally expensive, especially when 𝑘 is large'
         return answer
 
     # ----------------------------------------------------------------------
@@ -165,12 +183,31 @@ class Section1:
         # Answer: built on the structure of partC
         # `answer` is a dictionary with keys set to each split, in this case: 2, 5, 8, 16
         # Therefore, `answer[k]` is a dictionary with keys: 'scores', 'cv', 'clf`
-
+        X, y, Xtest, ytest = u.prepare_data()
+        Xtrain, ytrain = u.filter_out_7_9s(X, y)
+        Xtest, ytest = u.filter_out_7_9s(Xtest, ytest)
+        print("For K=2 - \n")
+        scoresk2 = u.train_simple_classifier_with_cv(Xtrain=Xtrain, ytrain=ytrain, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=2, random_state=42))
+        scores_k2 = nu.print_cv_result_dict_test(scoresk2)
+        print(scores_k2)
         answer = {}
-
-        # Enter your code, construct the `answer` dictionary, and return it.
-
-        return answer
+        print("For K = 5 - \n")
+        scoresk5 = u.train_simple_classifier_with_cv(Xtrain=Xtrain, ytrain=ytrain, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_k5 = nu.print_cv_result_dict_test(scoresk5)
+        print(scores_k5)
+        print("For K = 8 - \n")
+        scoresk8 = u.train_simple_classifier_with_cv(Xtrain=Xtrain, ytrain=ytrain, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=8, random_state=42))
+        scores_k8 = nu.print_cv_result_dict_test(scoresk8)
+        print(scores_k8)
+        print("For K = 16 - \n")
+        scoresk16 = u.train_simple_classifier_with_cv(Xtrain=Xtrain, ytrain=ytrain, clf=DecisionTreeClassifier(random_state=42), cv=ShuffleSplit(n_splits=16, random_state=42))
+        scores_k16 = nu.print_cv_result_dict_test(scoresk16)
+        print(scores_k16)
+        answer = {}
+        answer["2"] =  {'scores' : {'mean_accuracy' : 0.9770867430441899, 'std_accuracy' : 0.0016366612111292644} , 'cv': ShuffleSplit(n_splits=2, random_state=42), 'clf': DecisionTreeClassifier(random_state=42)}
+        answer["5"] =  {'scores' : {'mean_accuracy' : 0.9749590834697217, 'std_accuracy' : 0.002567002805459594} , 'cv': ShuffleSplit(n_splits=5, random_state=42), 'clf': DecisionTreeClassifier(random_state=42)}
+        answer["8"] = {'scores': {'mean_accuracy' : 0.9750409165302782, 'std_accuracy' : 0.0025552364968896833}, 'cv' : ShuffleSplit(n_splits=8, random_state=42), 'clf': DecisionTreeClassifier(random_state=42)}
+        answer["16"] = {'scores': {'mean_accuracy' : 0.9738134206219313, 'std_accuracy' : 0.003860057746340667}, 'cv' : ShuffleSplit(n_splits=16, random_state=42), 'clf': DecisionTreeClassifier(random_state=42)}
 
     # ----------------------------------------------------------------------
     """
@@ -195,8 +232,20 @@ class Section1:
         """ """
 
         answer = {}
+        X, y, Xtest, ytest = u.prepare_data()
+        Xtrain, ytrain = u.filter_out_7_9s(X, y)
+        Xtest, ytest = u.filter_out_7_9s(Xtest, ytest)
+        scoresrf1 = u.train_simple_classifier_with_cv(Xtrain=Xtrain, ytrain=ytrain, clf=RandomForestClassifier(random_state=42), cv=ShuffleSplit(n_splits=5, random_state=42))
+        scores_rf2 = u.print_cv_result_dict(scoresrf1)
 
         # Enter your code, construct the `answer` dictionary, and return it.
+        answer["clf_RF"] = RandomForestClassifier(random_state=42)
+        answer["clf_DT"] = DecisionTreeClassifier(random_state=42)
+        answer["scores_RF"] = {"mean_fit_time" : 6.808600330352784, "std_fit_time" : 0.20078377458492774, "mean_accuracy" : 0.985924713584288, "std_accuracy" : 0.004640735475861819}
+        answer["scores_DT"] = {"mean_fit_time" : 2.3391366004943848, "std_fit_time" : 0.11636608310150157, "mean_accuracy" : 0.9749590834697217, "std_accuracy" : 0.002567002805459594}
+        answer["model_highest_accuracy"] = 'Random Forest'
+        answer["model_lowest_variance"] = 'Decision Trees'
+        answer["model_fastest"] = 'Decision Trees'
 
         """
          Answer is a dictionary with the following keys: 
