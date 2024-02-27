@@ -313,11 +313,78 @@ class Section1:
          5) max_features 
          5) n_estimators
         """
-
+        X, y, Xtest, ytest = u.prepare_data()
+        Xtrain, ytrain = u.filter_out_7_9s(X, y)
+        Xtest, ytest = u.filter_out_7_9s(Xtest, ytest)
         answer = {}
+                param_grid = {'max_depth': [3, 5, 10], 'min_samples_split': [2, 5, 10], 'min_samples_leaf' : [1, 2, 3]}
+      
+        shuffle_split = ShuffleSplit(n_splits=5, random_state=42)
+        grid_search = GridSearchCV(RandomForestClassifier(random_state=42), param_grid, cv=shuffle_split, scoring='accuracy')
+    
+        grid_search.fit(Xtrain, ytrain)
+        
+        best_mean_accuracy_cv = grid_search.best_score_
+      
+ 
+        best_param = grid_search.best_params_
+        print("Best Parameters: ", best_param)
+     
+        best_clf = grid_search.best_estimator_
+ 
+        best_train_pred = best_clf.predict(Xtrain)
+        best_test_pred = best_clf.predict(Xtest)
+       
+        best_cm_x = confusion_matrix(ytrain, best_train_pred)
+        best_cm_y = confusion_matrix(ytest, best_test_pred)
+        
+        best_correct_predictions_x = np.diag(best_cm_x).sum()
+        best_correct_predictions_y = np.diag(best_cm_y).sum()
+       
+        best_total_predictions_x = best_cm_x.sum()
+        best_total_predictions_y = best_cm_x.sum()
+        
+        best_accuracy_x = best_correct_predictions_x / best_total_predictions_x
+        best_accuracy_y = best_correct_predictions_y / best_total_predictions_y
+       
 
+        
+        
+        clf_base = RandomForestClassifier(random_state=42)
+        clf_base_scores = cross_validate(clf_base, Xtrain, ytrain, cv = shuffle_split)
+       
+        clf_base.fit(Xtrain, ytrain)
+      
+        base_train_pred = clf_base.predict(Xtrain)
+        base_test_pred = clf_base.predict(Xtest)
+ 
+        base_cm_x = confusion_matrix(ytrain, base_train_pred)
+        base_cm_y = confusion_matrix(ytest, base_test_pred)
+        
+        base_correct_predictions_x = np.diag(base_cm_x).sum()
+        base_correct_predictions_y = np.diag(base_cm_y).sum()
+       
+        base_total_predictions_x = base_cm_x.sum()
+        base_total_predictions_y = base_cm_x.sum()
+        
+        base_accuracy_x = base_correct_predictions_x / base_total_predictions_x
+        base_accuracy_y = base_correct_predictions_y / base_total_predictions_y
+        
+        
         # Enter your code, construct the `answer` dictionary, and return it.
-
+        answer["clf"] = RandomForestClassifier(random_state=42)
+        answer["default_parameters"] = {"min_samples_leaf" : 1, "max_depth" : None, "min_samples_split" : 2}
+        answer["best_estimator"] = grid_search.best_estimator_
+        answer["grid_search"] = GridSearchCV(RandomForestClassifier(random_state=42), param_grid, cv=shuffle_split, scoring='accuracy')
+        answer["mean_accuracy_cv"] = 0.9833060556464812
+        answer["confusion_matrix_train_orig"] = confusion_matrix(ytrain, base_train_pred)
+        answer["confusion_matrix_train_best"] = confusion_matrix(ytrain, best_train_pred)
+        answer["confusion_matrix_test_orig"] = confusion_matrix(ytest, base_test_pred)
+        answer["confusion_matrix_test_best"] = confusion_matrix(ytest, best_test_pred)
+        answer["accuracy_orig_full_training"] = 1.0
+        answer["accuracy_best_full_training"] = 0.9968069428524644
+        answer["accuracy_orig_full_testing"] = 0.1649746192893401
+        answer["accuracy_best_full_testing"] = 0.16464712624856723
         """
            `answer`` is a dictionary with the following keys: 
             
